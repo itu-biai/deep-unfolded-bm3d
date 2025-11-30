@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "github_push",
+			"path": "."
+		},
+		{
+			"name": "assets",
+			"path": "../deep_unfolded_bm3d/assets"
+		}
+	],
+	"settings": {}
+}

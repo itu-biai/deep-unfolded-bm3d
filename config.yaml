@@ -1,0 +1,56 @@
+
+# Model Configuration
+model:
+  in_channels: 16
+  base_channels: 32
+  depth: 2
+  out_channels: 1
+
+# Training Configuration
+training:
+  epochs: 20
+  batch_size: 16
+  learning_rate: 0.0005
+  weight_decay: 0.0001
+  use_amp: true
+  gradient_clip: 1.0
+  
+# Data Configuration
+data:
+  patch_size: 16
+  stride: 4
+  window_size: 39
+  topk: 16
+  
+# Inference Configuration
+inference:
+  tile_size: 256
+  kaiser_beta: 2.0
+  group_batch: 64
+
+# Paths (update for your system)
+paths:
+  train_data: "data/train"
+  val_data: "data/val"
+  test_data: "data/test"
+  output_dir: "outputs"
+  checkpoints_dir: "outputs/checkpoints"
+  logs_dir: "outputs/logs"
+
+# Dataset Configuration
+dataset:
+  train_key: "noisy_clipped_100k"
+  val_key: "noisy_clipped_100k"
+  test_keys:
+    - "noisy_clipped_10k"
+    - "noisy_clipped_50k"
+    - "noisy_clipped_100k"
+    - "noisy_clipped_500k"
+  clean_key: "gt_clipped"
+
+# Noise Levels
+noise_levels:
+  - 10k
+  - 50k
+  - 100k
+  - 500k
