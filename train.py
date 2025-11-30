@@ -96,6 +96,12 @@ def train(config, model_path=None):
     device = get_device()
     set_seed(42)
     
+    # Validate config paths
+    required_paths = ['checkpoints_dir', 'logs_dir', 'train_data', 'val_data']
+    for path_key in required_paths:
+        if path_key not in config['paths']:
+            raise ValueError(f"Missing required config path: {path_key}")
+    
     # Create directories
     Path(config['paths']['checkpoints_dir']).mkdir(parents=True, exist_ok=True)
     Path(config['paths']['logs_dir']).mkdir(parents=True, exist_ok=True)
@@ -110,7 +116,15 @@ def train(config, model_path=None):
     
     print(f"Model parameters: {count_parameters(model):,}")
     
-    # Data
+    # Data - validate paths exist
+    train_data_path = Path(config['paths']['train_data'])
+    val_data_path = Path(config['paths']['val_data'])
+    
+    if not train_data_path.exists():
+        raise FileNotFoundError(f"Training data path not found: {train_data_path}")
+    if not val_data_path.exists():
+        raise FileNotFoundError(f"Validation data path not found: {val_data_path}")
+    
     train_loader, val_loader = build_dataloaders(
         config,
         config['paths']['train_data'],
@@ -154,7 +168,9 @@ def train(config, model_path=None):
         # Save checkpoint
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            checkpoint_path = Path(config['paths']['checkpoints_dir']) / 'best_model.pth'
+            checkpoint_dir = Path(config['paths']['checkpoints_dir'])
+            checkpoint_dir.mkdir(parents=True, exist_ok=True)
+            checkpoint_path = checkpoint_dir / 'best_model.pth'
             torch.save(model.state_dict(), checkpoint_path)
             print(f"✓ Saved best model: {checkpoint_path}")
     

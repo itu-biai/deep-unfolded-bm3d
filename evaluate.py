@@ -65,12 +65,21 @@ def evaluate(config, model_path):
     ).to(device)
     
     if model_path:
+        model_path = Path(model_path)
+        if not model_path.exists():
+            raise FileNotFoundError(f"Model checkpoint not found: {model_path}")
         model.load_state_dict(torch.load(model_path, map_location=device))
         print(f"✓ Loaded model: {model_path}")
+    else:
+        raise ValueError("Model path is required for evaluation")
     
     model.eval()
     
     # Test dataset
+    test_data_path = Path(config['paths']['test_data'])
+    if not test_data_path.exists():
+        raise FileNotFoundError(f"Test data path not found: {test_data_path}")
+    
     test_loader = torch.utils.data.DataLoader(
         NPZDataset(
             config['paths']['test_data'],

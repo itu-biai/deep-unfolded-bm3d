@@ -129,9 +129,11 @@ def denoise_npz_residual(model, noisy_img, config, device='cpu', tile_size=256):
     topk = config['data']['topk']
     kaiser_beta = config['inference']['kaiser_beta']
     
-    # Convert to tensor
-    img_tensor = torch.from_numpy(noisy_img).float().to(device)
-    img_tensor = img_tensor.unsqueeze(0).unsqueeze(0)  # [1, 1, H, W]
+    # Convert to tensor with boundary padding (reflect mode)
+    pad = patch_size // 2
+    img_padded = np.pad(noisy_img, ((pad, pad), (pad, pad)), mode='reflect')
+    img_tensor = torch.from_numpy(img_padded).float().to(device)
+    img_tensor = img_tensor.unsqueeze(0).unsqueeze(0)  # [1, 1, H_pad, W_pad]
     
     # Extract patches
     patches, coords, grid_hw = img_to_patches_and_coords(
@@ -163,18 +165,19 @@ def denoise_npz_residual(model, noisy_img, config, device='cpu', tile_size=256):
             denoised_patches.append(denoised_patch.cpu().numpy())
     
     # Aggregate patches
-    denoised = np.zeros_like(noisy_img)
-    weights = np.zeros_like(noisy_img)
+    denoised_padded = np.zeros_like(img_padded)
+    weights_padded = np.zeros_like(img_padded)
     
     for i, patch in enumerate(denoised_patches):
         y, x = coords[i]
         y, x = int(y), int(x)
         
         window_weight = kaiser.cpu().numpy()
-        denoised[y:y+patch_size, x:x+patch_size] += patch * window_weight
-        weights[y:y+patch_size, x:x+patch_size] += window_weight
+        denoised_padded[y:y+patch_size, x:x+patch_size] += patch * window_weight
+        weights_padded[y:y+patch_size, x:x+patch_size] += window_weight
     
-    # Normalize
-    denoised = denoised / (weights + 1e-8)
+    # Normalize and remove padding
+    denoised_padded = denoised_padded / (weights_padded + 1e-8)
+    denoised = denoised_padded[pad:pad+H, pad:pad+W]
     
     return denoised
