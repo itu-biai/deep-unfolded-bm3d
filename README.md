@@ -11,23 +11,75 @@ Deep learning-based denoising combining BM3D with trainable neural networks for 
 
 ## Quick Start
 
-### Local Setup
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/itu-biai/deep_unfolded_bm3d.git
+cd deep_unfolded_bm3d
+```
+
+### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
-python train.py
-python evaluate.py
 ```
 
-### Google Colab
+**Required Python version**: 3.8+
+
+**Verify Installation** (optional but recommended):
+
+```bash
+python verify_setup.py
+```
+
+This will check all dependencies and configurations.
+
+### 3. Prepare Data
+
+Place your NPZ dataset files in the following structure:
+
+```
+data/
+├── train/          # Training data (.npz files)
+├── val/            # Validation data (.npz files)
+└── test/           # Test data (.npz files)
+```
+
+Or use the sample data provided in `data/sample_data/`.
+
+### 4. Train Model
+
+```bash
+python train.py --config config.yaml
+```
+
+The model will save checkpoints to `outputs/checkpoints/best_model.pth`.
+
+### 5. Evaluate Model
+
+```bash
+python evaluate.py --config config.yaml --model outputs/checkpoints/best_model.pth
+```
+
+### Google Colab Setup
+
+For Google Colab users:
 
 ```python
+# Mount Google Drive
 from google.colab import drive
 drive.mount('/content/drive')
 
-# Download dataset from Google Drive
-# Update DATA_PATH in config
-python train_colab.py
+# Clone repository
+!git clone https://github.com/itu-biai/deep_unfolded_bm3d.git
+%cd deep_unfolded_bm3d
+
+# Install dependencies
+!pip install -r requirements.txt
+
+# Update paths in config.yaml to point to your Drive data
+# Then run training
+!python train_colab.py
 ```
 
 ## Dataset
