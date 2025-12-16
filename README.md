@@ -20,19 +20,41 @@ cd deep_unfolded_bm3d
 
 ### 2. Install Dependencies
 
+**Required Python version**: 3.9+ (tested on 3.9-3.12)
+
+#### Option A: Standard Installation (CPU or if you have CUDA already)
+
 ```bash
 pip install -r requirements.txt
 ```
 
-**Required Python version**: 3.8+
+#### Option B: With CUDA Support (Recommended for GPU acceleration)
 
-**Verify Installation** (optional but recommended):
+For CUDA 12.1 compatible systems:
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements.txt
+```
+
+For CUDA 11.8 compatible systems:
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install -r requirements.txt
+```
+
+For CPU-only systems:
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip install -r requirements.txt
+```
+
+**Verify Installation** (recommended):
 
 ```bash
 python verify_setup.py
 ```
 
-This will check all dependencies and configurations.
+This will check all dependencies, CUDA availability, and project configuration.
 
 ### 3. Prepare Data
 

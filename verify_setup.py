@@ -13,7 +13,7 @@ def check_imports():
         'numpy': 'NumPy',
         'yaml': 'PyYAML',
         'skimage': 'scikit-image',
-        'bm3d': 'BM3D',
+        'sklearn': 'scikit-learn',
         'tqdm': 'tqdm',
         'PIL': 'Pillow'
     }
