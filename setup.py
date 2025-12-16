@@ -1,6 +1,7 @@
 """
 Setup configuration for Deep Unfolded BM3D
 """
+
 from setuptools import setup, find_packages
 
 setup(
