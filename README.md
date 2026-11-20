@@ -250,7 +250,9 @@ Based on the paper: **Deep Unfolded BM3D: Unrolling Non-Local Collaborative Filt
 
 ## License
 
-GNU General Public License v3
+This project is licensed under the Creative Commons Attribution-NonCommercial
+4.0 International License (CC BY-NC 4.0) - see the [LICENSE](LICENSE.txt) file for
+details.
 
 ## Citation
 
